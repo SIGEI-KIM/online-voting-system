@@ -1,6 +1,34 @@
-node_modules
-vendor
-.git
-.idea
+# Ignore directories
+/node_modules
+/vendor
+/storage/*
+!/storage/public
+/.git
+/.github
+/.idea
+/.vscode
+
+# Ignore files
 .env
-docker
+.env.*
+docker-compose.yml
+docker-compose.*.yml
+Dockerfile*
+docker/
+*.md
+*.log
+*.sqlite
+*.DS_Store
+Thumbs.db
+
+# Build and CI files
+build.sh
+render.yaml
+.phpunit.result.cache
+.php_cs.cache
+
+# Frontend assets (if using Laravel Mix/Vite)
+/public/hot
+/public/storage
+/public/js
+/public/css

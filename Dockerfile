@@ -1,53 +1,41 @@
-FROM php:8.1-fpm-alpine
+# Use the official PHP image with Apache
+FROM php:8.2-apache
 
-# Install system dependencies
-RUN apk update && apk add --no-cache \
-    nginx \
-    supervisor \
-    git \
-    unzip \
+# Install dependencies
+RUN apt-get update && apt-get install -y \
     libzip-dev \
-    icu-dev \
-    postgresql-dev
-
-# Install PHP extensions
-RUN docker-php-ext-install -j$(nproc) \
-    pdo pdo_pgsql zip intl
+    zip \
+    unzip \
+    libpq-dev \
+    && docker-php-ext-install zip pdo pdo_pgsql
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy docker configuration files
-COPY docker /docker
-
-# Copy application files
+# Copy existing application directory
 COPY . .
 
 # Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev
 
-# Create storage link
-RUN php artisan storage:link
+# Generate application key
+RUN php artisan key:generate
 
-# Generate application key if it doesn't exist
-RUN php artisan key:generate --ansi
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html/storage
+RUN chmod -R 775 /var/www/html/storage
 
-# Set file permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+# Enable Apache rewrite module
+RUN a2enmod rewrite
 
-# Copy Nginx and Supervisor configurations
-COPY /docker/nginx.conf /etc/nginx/nginx.conf
-COPY /docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Copy custom Apache configuration
+COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # Expose port 80
 EXPOSE 80
 
-# Start Supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
-# Health check (optional, but recommended)
-HEALTHCHECK --interval=5s --timeout=3s CMD curl -f http://localhost
+# Start Apache
+CMD ["apache2-foreground"]
