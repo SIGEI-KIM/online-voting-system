@@ -1,7 +1,5 @@
 <?php
 
-<?php
-
 use App\Console\Commands\UpdateElectionStatus;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
