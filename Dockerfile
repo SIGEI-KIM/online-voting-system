@@ -37,8 +37,8 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Copy Nginx and Supervisor configurations
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY /docker/nginx.conf /etc/nginx/nginx.conf
+COPY /docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Expose port 80
 EXPOSE 80
