@@ -1,4 +1,8 @@
 <x-guest-layout>
+    <div class="flex justify-center mb-6">
+        <img src="{{ asset('images/iebc_logo.png') }}" alt="IEBC Logo" class="h-20">
+    </div>
+
     @if (session('success'))
         <div class="mb-4 font-medium text-sm text-green-600">
             {{ session('success') }}
@@ -41,7 +45,7 @@
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
+            <x-primary-button class="ms-3 bg-green-600 hover:bg-green-700">
                 {{ __('Log in') }}
             </x-primary-button>
         </div>

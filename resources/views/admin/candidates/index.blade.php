@@ -21,52 +21,37 @@
                         </div>
                     @endif
 
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('Name') }}
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('Position') }}
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('Election') }}
-                                </th>
-                                <th scope="col" class="relative px-6 py-3">
-                                    <span class="sr-only">{{ __('Actions') }}</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse ($candidates as $candidate)
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">{{ $candidate->name }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">{{ $candidate->position }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">{{ $candidate->election->name }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="{{ route('admin.candidates.show', $candidate) }}" class="text-indigo-600 hover:text-indigo-900">{{ __('View') }}</a>
-                                        <a href="{{ route('admin.candidates.edit', $candidate) }}" class="text-yellow-600 hover:text-yellow-900 ml-2">{{ __('Edit') }}</a>
-                                        <form action="{{ route('admin.candidates.destroy', $candidate) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 ml-2" onclick="return confirm('{{ __('Are you sure you want to delete this candidate?') }}')">{{ __('Delete') }}</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap" colspan="4">{{ __('No candidates found.') }}</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        @forelse ($candidates as $candidate)
+                            <div class="border rounded p-4">
+                                <div class="flex items-center mb-4">
+                                    @if ($candidate->photo)
+                                        <img src="{{ asset('storage/' . $candidate->photo) }}" alt="{{ $candidate->name }}" class="w-20 h-20 rounded-full mr-4 object-cover">
+                                    @else
+                                        <div class="w-20 h-20 bg-gray-200 rounded-full mr-4 flex items-center justify-center">
+                                            <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        </div>
+                                    @endif
+                                    <div>
+                                        <h3 class="font-semibold">{{ $candidate->name }}</h3>
+                                        <p class="text-gray-600">{{ $candidate->position }}</p>
+                                        <p class="text-sm text-gray-500">{{ $candidate->election->title }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-end">
+                                    <a href="{{ route('admin.candidates.show', $candidate) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">{{ __('View') }}</a>
+                                    <a href="{{ route('admin.candidates.edit', $candidate) }}" class="text-yellow-600 hover:text-yellow-900 mr-2">{{ __('Edit') }}</a>
+                                    <form action="{{ route('admin.candidates.destroy', $candidate) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('{{ __('Are you sure you want to delete this candidate?') }}')">{{ __('Delete') }}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        @empty
+                            <p>{{ __('No candidates found.') }}</p>
+                        @endforelse
+                    </div>
                 </div>
             </div>
         </div>

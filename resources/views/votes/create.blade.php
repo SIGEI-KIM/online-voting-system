@@ -1,121 +1,90 @@
 <x-app-layout>
-    <head>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    </head>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Vote') }}
+            {{ __('Vote in') }} {{ $election->title }}
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <h1 class="text-2xl font-bold mb-6">Vote in {{ $election->title }}</h1>
+        <div class="max-w-md mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <form id="votingForm" method="POST" action="{{ route('votes.store', $election) }}">
+                        @csrf
 
-                <form id="voteForm" method="POST" action="{{ route('votes.store', $election) }}">
-                    @csrf
-
-                    @foreach($election->candidates as $candidate)
-                    <div class="mb-6 p-4 border rounded-lg hover:bg-gray-50 transition">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="candidate_id" value="{{ $candidate->id }}"
-                                class="h-5 w-5 text-blue-600 focus:ring-blue-500" required>
-                            <div class="ml-4">
-                                <div class="flex items-center">
-                                    @if($candidate->photo)
-                                    <img src="{{ Storage::url($candidate->photo) }}"
-                                        class="h-12 w-12 rounded-full object-cover mr-3">
+                        <div class="mb-4">
+                            <p class="mb-2 font-semibold">{{ __('Select your candidate:') }}</p>
+                            @forelse ($election->candidates as $candidate)
+                                <div class="mb-4 border rounded p-3 flex items-center">
+                                    <input type="radio" id="candidate_{{ $candidate->id }}" name="candidate_id" value="{{ $candidate->id }}" class="mr-4">
+                                    @if ($candidate->photo)
+                                        <img src="{{ asset('storage/' . $candidate->photo) }}" alt="{{ $candidate->name }}" class="w-16 h-16 rounded-full object-cover mr-4">
+                                    @else
+                                        <div class="w-16 h-16 bg-gray-200 rounded-full mr-4 flex items-center justify-center">
+                                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        </div>
                                     @endif
                                     <div>
-                                        <span class="block font-medium text-lg">{{ $candidate->name }}</span>
-                                        <span class="block text-sm text-gray-500">{{ $candidate->position }}</span>
+                                        <label for="candidate_{{ $candidate->id }}" class="font-semibold">{{ $candidate->name }}</label>
+                                        <p class="text-sm text-gray-600">{{ $candidate->position }}</p>
+                                        @if ($candidate->biography)
+                                            <p class="text-xs text-gray-500 italic">{{ Str::limit($candidate->biography, 50) }}</p>
+                                        @endif
                                     </div>
                                 </div>
-                                <p class="mt-2 text-gray-700">{{ $candidate->bio }}</p>
-                            </div>
-                        </label>
-                    </div>
-                    @endforeach
+                            @empty
+                                <p>{{ __('No candidates available for this election.') }}</p>
+                            @endforelse
+                        </div>
 
-                    <x-primary-button id="submitVoteButton" class="w-full justify-center mt-6 py-3">
-                        {{ __('Submit Vote') }}
-                    </x-primary-button>
-                </form>
+                        @if ($election->candidates->isNotEmpty())
+                            <div class="flex justify-end">
+                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                    {{ __('Cast Vote') }}
+                                </button>
+                            </div>
+                        @endif
+                    </form>
+
+                    <div id="voteMessage" class="mt-4 font-semibold"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const form = document.getElementById('voteForm');
-        const submitButton = document.getElementById('submitVoteButton');
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('votingForm');
+            const voteMessage = document.getElementById('voteMessage');
 
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const formData = new FormData(form);
 
-            const formData = new FormData(form);
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF token
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    Toastify({
-                        text: "You have voted successfully!",
-                        duration: 3000,
-                        gravity: "top",
-                        position: "right",
-                        backgroundColor: "green",
-                    }).showToast();
-
-                    window.location.href = '{{ route('dashboard') }}'; // Redirect immediately
-
-                    // Disable the form and button to prevent multiple submissions
-                    form.querySelectorAll('input[type="radio"], button').forEach(el => el.disabled = true);
-                } else {
-                    // Check if the error is due to already voting
-                    if (data.message && data.message.includes('already voted')) {
-                        Toastify({
-                            text: data.message,
-                            duration: 5000,
-                            gravity: "top",
-                            position: "right",
-                            backgroundColor: "red", 
-                        }).showToast();
-                        window.location.href = '{{ route('dashboard') }}'; // Redirect immediately
-                        // disable the form 
-                        //form.querySelectorAll('input[type="radio"], button').forEach(el => el.disabled = true);
-                    } else {
-                        Toastify({
-                            text: data.message || "An error occurred.",
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            backgroundColor: "red",
-                        }).showToast();
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
-                }
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-                Toastify({
-                    text: "An error occurred: " + error.message,
-                    duration: 3000,
-                    gravity: "top",
-                    position: "right",
-                    backgroundColor: "red",
-                }).showToast();
+                })
+                .then(response => response.json())
+                .then(data => {
+                    voteMessage.textContent = data.message;
+                    if (data.success) {
+                        voteMessage.className = 'text-green-600';
+                    } else {
+                        voteMessage.className = 'text-red-600';
+                    }
+                    setTimeout(function() {
+                        window.location.href = '{{ route('dashboard') }}';
+                    }, 1500);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    voteMessage.className = 'text-red-600';
+                    voteMessage.textContent = 'An error occurred while recording your vote.';
+                });
             });
         });
     </script>
