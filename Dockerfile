@@ -20,6 +20,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Set working directory
 WORKDIR /var/www/html
 
+# Copy docker configuration files
+COPY docker /docker
+
 # Copy application files
 COPY . .
 
