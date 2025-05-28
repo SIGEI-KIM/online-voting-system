@@ -3,7 +3,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
-    <a href="{{ route('dashboard') }}">
+    <a href="{{ Auth::user()->is_admin ? route('admin.dashboard') : route('dashboard') }}">
         <img src="{{ asset('images/iebc_logo.png') }}" alt="IEBC Logo" class="block h-9 w-auto" style="height: 40px; width: auto;" />
     </a>
 </div>

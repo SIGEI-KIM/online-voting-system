@@ -28,25 +28,35 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
-{
-    $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-        'password' => ['required', 'confirmed', Rules\Password::defaults()],
-    ]);
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['required', 'string', 'in:voter,candidate'], // Validate the role
+        ]);
 
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-    ]);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role, // Save the selected role
+        ]);
 
-    event(new Registered($user));
+        event(new Registered($user));
 
-    // Add a success message to the session
-    session()->flash('success', 'Registration successful! Please log in.');
+        // Add a success message to the session
+        session()->flash('success', 'Registration successful! Please log in.');
 
-    // Redirect to the login page
-    return redirect(route('login'));
-}
+        Auth::login($user); // You might want to log the user in immediately after registration
+
+        // Redirect based on the user's role
+        if ($user->role === 'admin') {
+            return redirect(route('admin.dashboard'));
+        } elseif ($user->role === 'candidate') {
+            return redirect(route('candidate.dashboard'));
+        } else {
+            return redirect(RouteServiceProvider::HOME); // Default for voter
+        }
+    }
 }

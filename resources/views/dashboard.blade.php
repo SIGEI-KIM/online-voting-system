@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    {{-- Inline CSS for blinking effect --}}
+    {{-- Inline CSS for blinking effect (we can remove this entire style block if no other element uses it) --}}
     <style>
         .blink {
             animation: blinker 1s linear infinite;
@@ -23,7 +23,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <marquee behavior="scroll" direction="left" class="text-lg font-semibold text-green-600">
-                        Karibu kwenye Tovuti ya Uchaguzi! Welcome to the Voting Site!
+                        Welcome to the Voting Site!
                     </marquee>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                                             <span>End: {{ $election->end_date->format('M d, Y H:i') }}</span>
                                         </div>
                                         <a href="{{ route('votes.create', $election) }}"
-                                           class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 blink">
+                                           class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                             {{ __('Vote Now') }}
                                         </a>
                                     </div>
