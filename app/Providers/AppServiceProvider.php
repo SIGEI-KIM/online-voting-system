@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Admin; // Assuming you have an Admin model
+use App\Models\Admin; 
 use App\Models\Election;
 use App\Notifications\ElectionCompleted;
 use Illuminate\Console\Scheduling\Schedule;

@@ -10,8 +10,8 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('elections', function (Blueprint $table) {
+{
+    Schema::create('elections', function (Blueprint $table) {
     $table->id();
     $table->string('title');
     $table->text('description');
@@ -20,7 +20,7 @@ return new class extends Migration
     $table->enum('status', ['upcoming', 'ongoing', 'completed'])->default('upcoming');
     $table->timestamps();
 });
-    }
+}
 
     /**
      * Reverse the migrations.

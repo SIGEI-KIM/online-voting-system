@@ -1,11 +1,16 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800" style="color: #922529;">
-            Election Results
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
+{{-- Remove <x-app-layout> --}}
+
+@section('header')
+    <h2 class="text-xl font-semibold leading-tight text-gray-800" style="color: #922529;">
+        Election Results
+    </h2>
+@endsection
+
+@section('content') {{-- Ensure all main content is wrapped in @section('content') --}}
     <head>
+        {{-- The Chart.js script should ideally be in your main layout's <head> or before </body> --}}
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             /* Styles for larger screens (default) */
@@ -18,6 +23,9 @@
                 .election-results-table {
                     overflow-x: auto; /* Enable horizontal scrolling for tables */
                 }
+                /* You could add chart specific styles for tablets here if needed */
+                /* Example: */
+                /* canvas { font-size: 0.9em; } */
             }
 
             /* Styles for even smaller screens (e.g., phones) */
@@ -28,6 +36,16 @@
                     padding: 8px 5px;
                     font-size: 0.9em;
                 }
+                /* You could add chart specific styles for phones here if needed */
+                /* Example: */
+                /* canvas { margin-top: 10px; } */
+            }
+
+            /* Styles for very large screens */
+            @media (min-width: 1200px) {
+                /* You could adjust chart or table widths for larger displays */
+                /* Example: */
+                /* .p-6 { padding: 2rem; } */
             }
 
             /* Responsive chart (already mostly handled by width: 100%) */
@@ -183,89 +201,93 @@
             </div>
         </div>
     </div>
-</x-app-layout>
-<script>
-    @foreach($ongoingElections as $election)
-    {
-        const ctxOngoing{{ $election->id }} = document.getElementById('electionChart{{ $election->id }}').getContext('2d');
-        const ongoingElectionChart{{ $election->id }} = new Chart(ctxOngoing{{ $election->id }}, {
-            type: 'bar',
-            data: {
-                labels: [
-                    @foreach($election->candidates as $candidate)
-                        '{{ $candidate->name }}',
-                    @endforeach
-                ],
-                datasets: [{
-                    label: 'Votes',
-                    data: [
-                        @foreach($election->candidates as $candidate)
-                            {{ $candidate->votes_count }},
-                        @endforeach
-                    ],
-                    backgroundColor: [
-                        @foreach($election->candidates as $candidate)
-                            'rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, 0.2)',
-                        @endforeach
-                    ],
-                    borderColor: [
-                        @foreach($election->candidates as $candidate)
-                            'rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, 1)',
-                        @endforeach
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-    @endforeach
 
-    @foreach($pastElections as $election)
-    {
-        const ctxPast{{ $election->id }} = document.getElementById('pastElectionChart{{ $election->id }}').getContext('2d');
-        const pastElectionChart{{ $election->id }} = new Chart(ctxPast{{ $election->id }}, {
-            type: 'bar',
-            data: {
-                labels: [
-                    @foreach($election->candidates as $candidate)
-                        '{{ $candidate->name }}',
-                    @endforeach
-                ],
-                datasets: [{
-                    label: 'Votes',
-                    data: [
-                        @foreach($election->candidates as $candidate)
-                            {{ $candidate->votes_count }},
-                        @endforeach
-                    ],
-                    backgroundColor: [
-                        @foreach($election->candidates as $candidate)
-                            'rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, 0.2)',
-                        @endforeach
-                    ],
-                    borderColor: [
-                        @foreach($election->candidates as $candidate)
-                            'rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, 1)',
-                        @endforeach
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+    {{-- Move the script block inside @section('content') and wrap in window.onload --}}
+    <script>
+        window.onload = function() {
+            @foreach($ongoingElections as $election)
+            {
+                const ctxOngoing{{ $election->id }} = document.getElementById('electionChart{{ $election->id }}').getContext('2d');
+                const ongoingElectionChart{{ $election->id }} = new Chart(ctxOngoing{{ $election->id }}, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            @foreach($election->candidates as $candidate)
+                                '{{ $candidate->name }}',
+                            @endforeach
+                        ],
+                        datasets: [{
+                            label: 'Votes',
+                            data: [
+                                @foreach($election->candidates as $candidate)
+                                    {{ $candidate->votes_count }},
+                                @endforeach
+                            ],
+                            backgroundColor: [
+                                @foreach($election->candidates as $candidate)
+                                    'rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, 0.2)',
+                                @endforeach
+                            ],
+                            borderColor: [
+                                @foreach($election->candidates as $candidate)
+                                    'rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, 1)',
+                                @endforeach
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
                     }
-                }
+                });
             }
-        });
-    }
-    @endforeach
-</script>
+            @endforeach
+
+            @foreach($pastElections as $election)
+            {
+                const ctxPast{{ $election->id }} = document.getElementById('pastElectionChart{{ $election->id }}').getContext('2d');
+                const pastElectionChart{{ $election->id }} = new Chart(ctxPast{{ $election->id }}, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            @foreach($election->candidates as $candidate)
+                                '{{ $candidate->name }}',
+                            @endforeach
+                        ],
+                        datasets: [{
+                            label: 'Votes',
+                            data: [
+                                @foreach($election->candidates as $candidate)
+                                    {{ $candidate->votes_count }},
+                                @endforeach
+                            ],
+                            backgroundColor: [
+                                @foreach($election->candidates as $candidate)
+                                    'rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, 0.2)',
+                                @endforeach
+                            ],
+                            borderColor: [
+                                @foreach($election->candidates as $candidate)
+                                    'rgba({{ rand(0, 255) }}, {{ rand(0, 255) }}, {{ rand(0, 255) }}, 1)',
+                                @endforeach
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            @endforeach
+        }; // End of window.onload
+    </script>
+@endsection

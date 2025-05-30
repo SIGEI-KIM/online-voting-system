@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Providers\RouteServiceProvider;
+
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -48,15 +50,7 @@ class RegisteredUserController extends Controller
         // Add a success message to the session
         session()->flash('success', 'Registration successful! Please log in.');
 
-        Auth::login($user); // You might want to log the user in immediately after registration
-
-        // Redirect based on the user's role
-        if ($user->role === 'admin') {
-            return redirect(route('admin.dashboard'));
-        } elseif ($user->role === 'candidate') {
-            return redirect(route('candidate.dashboard'));
-        } else {
-            return redirect(RouteServiceProvider::HOME); // Default for voter
-        }
+        // Redirect to the login page
+        return redirect(route('login'));
     }
 }

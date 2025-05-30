@@ -5,6 +5,7 @@ use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ElectionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VoterProfileController; // Don't forget to use this controller
 use App\Http\Controllers\VoteController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,7 +22,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/elections/{election}/results', [VoteController::class, 'results'])->name('votes.results');
 
-
     // Voting routes
     Route::prefix('elections/{election}')->group(function () {
         Route::get('/vote', [VoteController::class, 'create'])->name('votes.create');
@@ -32,7 +32,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/past-results', [VoteController::class, 'results'])->name('voter.past_results');
     Route::get('/voter/past-election/{election}/results', [ElectionController::class, 'voterPastElectionResults'])->name('voter.past.election.results');
 
-    // Profile routes
+    // Voter profile routes
+    Route::get('/voter/profile', [VoterProfileController::class, 'edit'])->name('voter.profile.edit');
+    Route::put('/voter/profile', [VoterProfileController::class, 'update'])->name('voter.profile.update');
+    Route::put('/voter/password', [VoterProfileController::class, 'updatePassword'])->name('voter.password.update');
+    Route::delete('/voter/profile', [VoterProfileController::class, 'destroy'])->name('voter.profile.destroy');
+
+    // Profile routes (for the main /profile path - now handled by ProfileController)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -41,7 +47,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/results', [ElectionController::class, 'adminShowResults'])->name('admin.results'); // Changed URI to /results
+    Route::get('/results', [ElectionController::class, 'adminShowResults'])->name('admin.results');
+
 
     // Candidates Management
     Route::get('/candidates', [CandidateController::class, 'index'])->name('admin.candidates.index');
