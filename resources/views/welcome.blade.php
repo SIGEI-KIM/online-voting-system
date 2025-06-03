@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ONLINE Voting Platform</title>
+    <title>Online Voting Platform</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <style>
         body {
             font-family: 'figtree', sans-serif;
-            background-color: #f7f7f7;
+            background-color: #e0f2e7; 
             color: #333;
             margin: 0;
             padding: 0;
@@ -28,45 +28,46 @@
         }
 
         .logo {
-            max-width: 100px; /* Slightly smaller logo */
-            margin-bottom: 10px;
+            max-width: 100px;
+            margin-bottom: 20px;
         }
 
         .welcome-area {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .vote-icon {
-            max-width: 80px; /* Increased size */
-            margin-bottom: 15px; /* Slightly more space below */
-            border-radius: 10px; /* Add border-radius for rounded corners */
+            max-width: 80px;
+            margin-bottom: 15px;
+            border-radius: 10px;
         }
 
         h1 {
-            color: #007bff; /* A common primary color */
+            color: #28a745; 
             margin-bottom: 10px;
         }
 
         p {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .links {
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
         .links a {
             padding: 12px 20px;
             text-decoration: none;
             color: #fff;
-            background-color: #28a745; /* A green for positive actions */
+            background-color: #28a745; 
             border-radius: 6px;
             margin: 0 10px;
             font-weight: bold;
             display: inline-block;
+            cursor: pointer;
         }
 
         .links a:hover {
@@ -83,20 +84,13 @@
         <div class="welcome-area">
             <img src="{{ asset('images/casting_vote.png') }}" alt="Casting Vote Icon" class="vote-icon">
             <h1>Welcome to the Online Voting Platform</h1>
-            <p>Your platform for participating in democratic elections.</p>
+            <p>Participate in democratic elections online.</p>
         </div>
 
         <div class="links">
-            @if (Route::has('login'))
-                @auth
-                    <a href="{{ url('/dashboard') }}">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}">Log in</a>
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}">Register</a>
-                    @endif
-                @endauth
+            <a href="{{ route('login') }}">Log in</a>
+            @if (Route::has('register'))
+                <a href="{{ route('register') }}">Register</a>
             @endif
         </div>
     </div>

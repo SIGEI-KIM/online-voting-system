@@ -6,16 +6,22 @@ use App\Models\Election;
 use App\Models\Candidate;
 use App\Models\Vote;
 use App\Models\User;
+use Illuminate\View\View;
 
 class AdminController extends Controller
 {
     public function dashboard()
     {
+        $now = now();
+
         $stats = [
             'elections' => Election::count(),
+            'ongoingElections' => Election::where('start_date', '<=', $now)
+                                       ->where('end_date', '>=', $now)
+                                       ->count(),
             'candidates' => Candidate::count(),
             'votes' => Vote::count(),
-            'users' => User::count()
+            'users' => User::count(),
         ];
 
         $recentElections = Election::orderBy('created_at', 'desc')->limit(5)->get();
@@ -34,5 +40,10 @@ class AdminController extends Controller
 
 
     return view('admin.results', compact('elections'));
+}
+public function showVoteDetails(): View
+{
+    $votes = Vote::with(['user', 'candidate', 'election'])->latest()->paginate(15);
+    return view('admin.votes.index', compact('votes'));
 }
 }

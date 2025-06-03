@@ -35,19 +35,19 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'string', 'in:voter,candidate'], // Validate the role
+            'role' => ['required', 'string', 'in:voter,candidate'], 
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role, // Save the selected role
+            'role' => $request->role, 
         ]);
 
         event(new Registered($user));
 
-        // Add a success message to the session
+        // success message to the session
         session()->flash('success', 'Registration successful! Please log in.');
 
         // Redirect to the login page

@@ -23,19 +23,27 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('admin.candidates.index') }}" class="flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 group">
-                <svg class="flex-shrink-0 w-6 h-6 text-gray-400 group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
-                <span class="ml-3 sidebar-text" x-show="isSidebarOpen">{{ __('Candidates') }}</span>
+            {{-- Fetch pending applications count --}}
+            @php
+                // Ensure the Application model is imported or fully qualified
+                // use App\Models\Application; // Add this at the top of the file if not already there
+                $pendingApplicationsCount = \App\Models\Application::where('status', 'pending')->count();
+            @endphp
+            <a href="{{ route('admin.applications.index') }}" class="flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 group">
+                <div class="relative flex-shrink-0">
+                    <svg class="w-6 h-6 text-gray-400 group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                    {{-- Badge for pending applications --}}
+                    @if ($pendingApplicationsCount >= 0 && $isSidebarOpen) {{-- Show badge when sidebar is open, regardless of count --}}
+                        <span class="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                            {{ $pendingApplicationsCount }}
+                        </span>
+                    @endif
+                </div>
+                <span class="ml-3 sidebar-text" x-show="isSidebarOpen">{{ __('Applications') }}</span>
             </a>
         </li>
         <li>
-            <a href="{{ route('admin.candidates.create') }}" class="flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 group">
-                <svg class="flex-shrink-0 w-6 h-6 text-gray-400 group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
-                <span class="ml-3 sidebar-text" x-show="isSidebarOpen">{{ __('Add Candidate') }}</span>
-            </a>
-        </li>
-        <li>
-            <a href="#" class="flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 group">
+            <a href="{{ route('users.index') }}" class="flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 group">
                 <svg class="flex-shrink-0 w-6 h-6 text-gray-400 group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2zM11 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z"></path></svg>
                 <span class="ml-3 sidebar-text" x-show="isSidebarOpen">{{ __('Users') }}</span>
             </a>
@@ -49,7 +57,7 @@
         <li>
             <a href="{{ route('profile.edit') }}" class="flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 group">
                 <svg class="flex-shrink-0 w-6 h-6 text-gray-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.125h15.002c.398 0 .73-.228.91-.606l3-7.004A2.25 2.25 0 0018.75 10.5h-1.586l-4.7-8.19a.75.75 0 00-.53-.234h-4.622a.75.75 0 00-.529.234l-4.7 8.19H5.25a2.25 2.25 0 00-2.182 2.496l3 7.004c.18.378.512.606.91.606z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.125h15.002c.398 0 .73-.228.91-.606l3-7.004A2.25 2.25 0 0018.75 10.5h-1.586l-4.7-8.19a.75.75 0 00-.53-.234h-4.622a.75.75 0 00-.529.234l-4.7 8.19H5.25a2.25 2 0 00-2.182 2.496l3 7.004c.18.378.512.606.91.606z" />
                 </svg>
                 <span class="ml-3 sidebar-text" x-show="isSidebarOpen">{{ __('Profile') }}</span>
             </a>

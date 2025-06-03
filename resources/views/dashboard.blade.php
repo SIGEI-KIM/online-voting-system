@@ -43,8 +43,10 @@
                                         <h4 class="font-bold text-lg mb-2">{{ $election->title }}</h4>
                                         <p class="text-gray-600 mb-4">{{ $election->description }}</p>
                                         <div class="flex justify-between text-sm text-gray-500 mb-4">
-                                            <span>Start: {{ $election->start_date->format('M d, Y H:i') }}</span>
-                                            <span>End: {{ $election->end_date->format('M d, Y H:i') }}</span>
+                                            {{-- MODIFIED LINE BELOW: Added setTimezone('Africa/Nairobi') --}}
+                                            <span>Start: {{ $election->start_date->setTimezone('Africa/Nairobi')->format('M d, Y H:i') }}</span>
+                                            {{-- MODIFIED LINE BELOW: Added setTimezone('Africa/Nairobi') --}}
+                                            <span>End: {{ $election->end_date->setTimezone('Africa/Nairobi')->format('M d, Y H:i') }}</span>
                                         </div>
                                         <a href="{{ route('votes.create', $election) }}"
                                            class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
@@ -69,8 +71,10 @@
                                         <h4 class="font-bold text-lg mb-2">{{ $election->title }}</h4>
                                         <p class="text-gray-600 mb-4">{{ $election->description }}</p>
                                         <div class="flex justify-between text-sm text-gray-500 mb-4">
-                                            <span>Start: {{ $election->start_date->format('M d, Y H:i') }}</span>
-                                            <span>End: {{ $election->end_date->format('M d, Y H:i') }}</span>
+                                            {{-- MODIFIED LINE BELOW: Added setTimezone('Africa/Nairobi') --}}
+                                            <span>Start: {{ $election->start_date->setTimezone('Africa/Nairobi')->format('M d, Y H:i') }}</span>
+                                            {{-- MODIFIED LINE BELOW: Added setTimezone('Africa/Nairobi') --}}
+                                            <span>End: {{ $election->end_date->setTimezone('Africa/Nairobi')->format('M d, Y H:i') }}</span>
                                         </div>
                                         <button disabled
                                                 class="inline-flex items-center px-4 py-2 bg-gray-400 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest transition ease-in-out duration-150">
@@ -95,7 +99,8 @@
                                         <h4 class="font-bold text-lg mb-2">{{ $election->title }}</h4>
                                         <p class="text-gray-600 mb-4">{{ $election->description }}</p>
                                         <div class="flex justify-between text-sm text-gray-500 mb-4">
-                                            <span>Ended: {{ $election->end_date->format('M d, Y H:i') }}</span>
+                                            {{-- MODIFIED LINE BELOW: Added setTimezone('Africa/Nairobi') --}}
+                                            <span>Ended: {{ $election->end_date->setTimezone('Africa/Nairobi')->format('M d, Y H:i') }}</span>
                                         </div>
                                         <a href="{{ route('voter.past.election.results', $election) }}"
                                            class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">

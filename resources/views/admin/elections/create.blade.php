@@ -1,10 +1,12 @@
-<x-admin-layout> {{-- Changed from x-app-layout --}}
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            Create New Election
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('header')
+    <h2 class="text-xl font-semibold leading-tight text-gray-800">
+        Create New Election
+    </h2>
+@endsection
+
+@section('content')
     <div class="py-12">
         <div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
             <form method="POST" action="{{ route('elections.store') }}">
@@ -52,4 +54,4 @@
             </form>
         </div>
     </div>
-</x-admin-layout>
+@endsection

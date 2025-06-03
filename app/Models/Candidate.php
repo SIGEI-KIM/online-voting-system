@@ -13,13 +13,12 @@ class Candidate extends Model
      */
     protected $fillable = [
         'name',
-        'position',
         'election_id',
+        'user_id',
+        'position',
+        'bio',
         'photo',
-        'bio', // Assuming you have a 'bio' column
-        'user_id', // Add this line
     ];
-
     /**
      * Get the election that the candidate belongs to.
      */

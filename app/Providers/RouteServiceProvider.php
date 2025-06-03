@@ -39,8 +39,8 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             //Route::middleware('api')
-               // ->prefix('api')
-                //->group(base_path('routes/api.php'));
+            // ->prefix('api')
+            //->group(base_path('routes/api.php'));
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
@@ -58,4 +58,29 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
     }
+
+    /**
+     * The path to redirect users after authentication.
+     *
+     * @return string
+     */
+    public function redirectTo()
+{
+    if (auth()->check()) {
+        $user = auth()->user();
+        $role = trim($user->role);
+
+        if ($role === 'admin') {
+            return '/admin/dashboard';
+        } elseif ($role === 'candidate') {
+            return '/candidate/dashboard';
+        } elseif ($role === 'voter') {
+            return '/voter/dashboard';
+        } else {
+            return '/home'; // Fallback
+        }
+    }
+
+    return '/login';
+}
 }

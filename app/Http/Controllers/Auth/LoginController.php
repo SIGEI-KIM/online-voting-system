@@ -6,24 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use App\Providers\RouteServiceProvider;
-
+use App\Providers\RouteServiceProvider; // Keep this if you use other constants from it
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    // If you had a RouteServiceProvider, this would typically be defined there.
-    // protected $redirectTo = RouteServiceProvider::HOME;
+    // Remove or comment out: protected $redirectTo = RouteServiceProvider::HOME;
+    // The custom login method will handle redirection directly.
 
     /**
      * Create a new controller instance.
@@ -32,8 +20,6 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        // This middleware ensures only guests can access login/register forms
-        // and redirects authenticated users away.
         $this->middleware('guest')->except('logout');
     }
 
@@ -65,12 +51,20 @@ class LoginController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            // Custom redirection logic based on user role
-            if (Auth::user()->is_admin) {
-                return redirect()->intended('/admin/dashboard');
-            }
+            // Direct role-based redirection logic
+            $user = Auth::user();
+            $role = trim($user->role); // Ensure no whitespace
 
-            return redirect()->intended('/dashboard');
+            if ($role === 'admin') {
+                return redirect()->intended('/admin/dashboard');
+            } elseif ($role === 'candidate') {
+                return redirect()->intended('/candidate/dashboard');
+            } elseif ($role === 'voter') {
+                return redirect()->intended('/voter/dashboard');
+            } else {
+                // Fallback for any other roles or if role is not set
+                return redirect()->intended('/'); // Redirect to root or a general home page
+            }
         }
 
         throw ValidationException::withMessages([

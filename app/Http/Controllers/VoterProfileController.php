@@ -24,6 +24,9 @@ class VoterProfileController extends Controller
     /**
      * Update the voter's profile information.
      */
+    /**
+     * Update the voter's profile information.
+     */
     public function update(Request $request): RedirectResponse
     {
         $request->validate([
@@ -41,9 +44,8 @@ class VoterProfileController extends Controller
 
         $user->save();
 
-        return redirect()->route('voter.profile.edit')->with('success', 'Profile updated successfully!');
+        return redirect()->route('voter.dashboard')->with('success', 'Profile updated successfully!');
     }
-
     /**
      * Update the voter's password.
      */

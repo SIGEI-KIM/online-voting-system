@@ -1,0 +1,11 @@
+[90m= [39m[34;4mApp\Models\Election[39;24m {#6255
+    [34mid[39m: [35m1[39m,
+    [34mtitle[39m: "[32mPresidential Election[39m",
+    [34mdescription[39m: "[32mpresidential election for 2025[39m",
+    [34mstart_date[39m: "[32m2025-05-30 08:00:00[39m",
+    [34mend_date[39m: "[32m2025-06-01 16:52:00[39m",
+    [34mstatus[39m: "[32mcompleted[39m",
+    [34mcreated_at[39m: "[32m2025-05-31 16:53:03[39m",
+    [34mupdated_at[39m: "[32m2025-06-01 19:52:01[39m",
+  }
+

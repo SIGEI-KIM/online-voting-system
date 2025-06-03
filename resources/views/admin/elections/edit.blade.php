@@ -22,20 +22,22 @@
 
                         <div class="mb-4">
                             <x-input-label for="start_date" :value="__('Start Date')" class="block font-medium text-sm text-gray-700" />
-                            <x-text-input id="start_date" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-green-500 focus:ring-green-500" type="datetime-local" name="start_date" :value="old('start_date', \Carbon\Carbon::parse($election->start_date)->format('Y-m-d\TH:i'))" required />
+                            {{-- MODIFIED LINE BELOW: Added setTimezone('Africa/Nairobi') --}}
+                            <x-text-input id="start_date" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-green-500 focus:ring-green-500" type="datetime-local" name="start_date" :value="old('start_date', \Carbon\Carbon::parse($election->start_date)->setTimezone('Africa/Nairobi')->format('Y-m-d\TH:i'))" required />
                             <x-input-error :messages="$errors->get('start_date')" class="mt-2 text-sm text-red-600" />
                         </div>
 
                         <div class="mb-4">
                             <x-input-label for="end_date" :value="__('End Date')" class="block font-medium text-sm text-gray-700" />
-                            <x-text-input id="end_date" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-green-500 focus:ring-green-500" type="datetime-local" name="end_date" :value="old('end_date', \Carbon\Carbon::parse($election->end_date)->format('Y-m-d\TH:i'))" required />
+                            {{-- MODIFIED LINE BELOW: Added setTimezone('Africa/Nairobi') --}}
+                            <x-text-input id="end_date" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-green-500 focus:ring-green-500" type="datetime-local" name="end_date" :value="old('end_date', \Carbon\Carbon::parse($election->end_date)->setTimezone('Africa/Nairobi')->format('Y-m-d\TH:i'))" required />
                             <x-input-error :messages="$errors->get('end_date')" class="mt-2 text-sm text-red-600" />
                         </div>
 
                         <div class="mb-4">
                             <x-input-label for="status" :value="__('Status')" class="block font-medium text-sm text-gray-700" />
                             <select id="status" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-green-500 focus:ring-green-500" name="status" required>
-                                <option value="pending" {{ old('status', $election->status) === 'pending' ? 'selected' : '' }}>{{ __('Pending') }}</option>
+                                <option value="upcoming" {{ old('status', $election->status) === 'upcoming' ? 'selected' : '' }}>{{ __('Upcoming') }}</option>
                                 <option value="ongoing" {{ old('status', $election->status) === 'ongoing' ? 'selected' : '' }}>{{ __('Ongoing') }}</option>
                                 <option value="completed" {{ old('status', $election->status) === 'completed' ? 'selected' : '' }}>{{ __('Completed') }}</option>
                             </select>

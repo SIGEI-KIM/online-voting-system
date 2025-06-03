@@ -3,13 +3,13 @@
         <div class="flex justify-between h-16">
             <div class="flex items-center">
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ Auth::user()->is_admin ? route('admin.dashboard') : route('dashboard') }}">
+                    <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : (Auth::user()->role === 'candidate' ? route('candidate.dashboard') : (Auth::user()->role === 'voter' ? route('voter.dashboard') : route('dashboard'))) }}">
                         <img src="{{ asset('images/iebc_logo.png') }}" alt="IEBC Logo" class="block h-9 w-auto" style="height: 40px; width: auto;" />
                     </a>
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="Auth::user()->is_admin ? route('admin.dashboard') : route('dashboard')" :active="request()->routeIs('dashboard') || request()->routeIs('admin.dashboard')">
+                    <x-nav-link :href="Auth::user()->role === 'admin' ? route('admin.dashboard') : (Auth::user()->role === 'candidate' ? route('candidate.dashboard') : (Auth::user()->role === 'voter' ? route('voter.dashboard') : route('dashboard')))" :active="request()->routeIs('admin.dashboard') || request()->routeIs('candidate.dashboard') || request()->routeIs('voter.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>

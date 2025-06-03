@@ -288,6 +288,6 @@
                 });
             }
             @endforeach
-        }; // End of window.onload
+        }; 
     </script>
 @endsection

@@ -15,18 +15,35 @@
 
         <style>
         .blink {
-            animation: blinker 1.5s step-end infinite; /* Total duration 1.5 seconds */
+            animation: blinker 1.5s step-end infinite; 
         }
 
         @keyframes blinker {
             50% { opacity: 0; }
         }
-    </style>
+        </style>
 
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
+
+            {{-- Toast Notification for Success Messages --}}
+            @if (session('success'))
+                <div x-data="{ show: true }"
+                     x-show="show"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 transform -translate-y-full"
+                     x-transition:enter-end="opacity-100 transform translate-y-0"
+                     x-transition:leave="transition ease-in duration-300"
+                     x-transition:leave-start="opacity-100 transform translate-y-0"
+                     x-transition:leave-end="opacity-0 transform -translate-y-full"
+                     x-init="setTimeout(() => show = false, 3000)" {{-- Hide after 3 seconds --}}
+                     class="fixed top-0 left-1/2 -translate-x-1/2 mt-4 px-6 py-3 bg-green-500 text-white rounded-lg shadow-lg z-50 text-center"
+                >
+                    {{ session('success') }}
+                </div>
+            @endif
 
             @isset($header)
                 <header class="bg-white shadow">
