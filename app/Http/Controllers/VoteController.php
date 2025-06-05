@@ -19,9 +19,7 @@ class VoteController extends Controller
         return redirect()->route('dashboard')->with('error', 'Voting period has ended');
     }
 
-    // We no longer redirect if the user has already voted.
-    // The check will happen in the store method.
-
+  
     // Eager load the candidates for the election
     $election->load('candidates');
 

@@ -18,8 +18,7 @@ return new class extends Migration
     $table->foreignId('user_id')->constrained()->onDelete('cascade');
     $table->timestamp('voted_at')->useCurrent();
     $table->timestamps();
-    
-    $table->unique(['election_id', 'user_id']); // Prevent duplicate votes
+    $table->unique(['election_id', 'user_id']);  
 });
     }
 

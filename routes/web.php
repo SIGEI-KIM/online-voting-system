@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified', 'role:candidate'])->prefix('candidate')->
 
     Route::get('/apply-election/choose', [\App\Http\Controllers\Candidate\ElectionController::class, 'chooseElection'])->name('candidate.apply.choose');
     Route::post('/apply-election/{election}/submit', [\App\Http\Controllers\Candidate\ElectionController::class, 'submitApplication'])->name('candidate.apply.submit');
+    
 });
 
 // Admin routes

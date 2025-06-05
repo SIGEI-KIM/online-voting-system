@@ -77,7 +77,7 @@
                         voteMessage.className = 'text-red-600';
                     }
                     setTimeout(function() {
-                        window.location.href = '{{ route('voter.dashboard') }}'; // <-- Changed here
+                        window.location.href = '{{ route('voter.dashboard') }}'
                     }, 1500);
                 })
                 .catch(error => {

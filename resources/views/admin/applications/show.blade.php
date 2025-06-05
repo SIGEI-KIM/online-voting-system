@@ -1,14 +1,12 @@
-<x-admin-layout>
-    <x-slot name="header">
-        <div class="bg-white shadow">
-            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    {{ __('Review Application') }}
-                </h2>
-            </div>
-        </div>
-    </x-slot>
+@extends('layouts.admin') {{-- Ensure this extends your main admin layout --}}
 
+@section('header')
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ __('Review Application') }}
+    </h2>
+@endsection
+
+@section('content')
     <div class="py-10 bg-gray-100">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg rounded-lg border">
@@ -37,21 +35,34 @@
                         <p class="mt-1 text-gray-600">{{ $application->contact_phone }}</p>
                     </div>
 
+                    {{-- CRITICAL FIX: Using 'passport_photo_path' as per your database schema --}}
+                    {{-- And using Storage::url() for correct public file access --}}
                     @if ($application->passport_photo_path)
                         <div>
                             <strong class="text-gray-700 block mb-2">{{ __('Passport Photo:') }}</strong>
                             <div class="rounded-md overflow-hidden shadow-md border w-48">
-                                <img src="{{ asset('storage/' . $application->passport_photo_path) }}" alt="Passport Photo" class="w-full h-auto">
+                                <img src="{{ Storage::url($application->passport_photo_path) }}" alt="Passport Photo" class="w-full h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/192x192/CCCCCC/333333?text=Photo+Error';" />
                             </div>
+                        </div>
+                    @else
+                        <div>
+                            <strong class="text-gray-700">{{ __('Passport Photo:') }}</strong>
+                            <p class="mt-1 text-gray-600">{{ __('No photo uploaded.') }}</p>
                         </div>
                     @endif
 
+                    {{-- CRITICAL FIX: Using 'document_path' as per your database schema --}}
                     @if ($application->document_path)
                         <div>
                             <strong class="text-gray-700">{{ __('Supporting Document:') }}</strong>
                             <p class="mt-1">
-                                <a href="{{ asset('storage/' . $application->document_path) }}" target="_blank" class="text-blue-600 hover:underline">{{ __('View Document') }}</a>
+                                <a href="{{ Storage::url($application->document_path) }}" target="_blank" class="text-blue-600 hover:underline">{{ __('View Document') }}</a>
                             </p>
+                        </div>
+                    @else
+                        <div>
+                            <strong class="text-gray-700">{{ __('Supporting Document:') }}</strong>
+                            <p class="mt-1 text-gray-600">{{ __('No document uploaded.') }}</p>
                         </div>
                     @endif
                 </div>
@@ -73,4 +84,4 @@
             </div>
         </div>
     </div>
-</x-admin-layout>
+@endsection

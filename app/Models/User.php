@@ -49,4 +49,10 @@ class User extends Authenticatable
 {
     return $this->hasMany(Vote::class);
 }
+
+
+public function candidate()
+{
+    return $this->hasOne(Candidate::class);
+}
 }

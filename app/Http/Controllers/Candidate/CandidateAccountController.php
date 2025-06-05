@@ -1,28 +1,33 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Candidate;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect; 
+use Illuminate\Support\Facades\Redirect;
 
-class VoterProfileController extends Controller
+use App\Models\User; 
+use App\Models\Candidate; 
+
+class CandidateAccountController extends Controller
 {
     /**
-     * Display the voter's profile edit form.
+     * Display the candidate's personal account settings form.
      */
     public function edit(Request $request): View
     {
-        return view('voter.profile', [
+   
+        return view('candidate.account-settings.edit', [
             'user' => $request->user(),
         ]);
     }
 
     /**
-     * Update the voter's profile information.
+     * Update the candidate's personal account information (name, email).
      */
     public function update(Request $request): RedirectResponse
     {
@@ -38,13 +43,13 @@ class VoterProfileController extends Controller
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
-
         $user->save();
 
-        return redirect()->route('voter.dashboard')->with('success', 'Profile updated successfully!');
+        return redirect()->route('candidate.account.edit')->with('success', 'Account information updated successfully!');
     }
+
     /**
-     * Update the voter's password.
+     * Update the candidate's password.
      */
     public function updatePassword(Request $request): RedirectResponse
     {
@@ -54,7 +59,6 @@ class VoterProfileController extends Controller
         ]);
 
         $user = $request->user();
-
         $user->password = Hash::make($request->password);
         $user->save();
 
@@ -62,7 +66,7 @@ class VoterProfileController extends Controller
     }
 
     /**
-     * Delete the voter's account.
+     * Delete the candidate's account.
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -71,6 +75,11 @@ class VoterProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+       
+        if ($user->candidate) {
+            $user->candidate->delete();
+        }
 
         Auth::logout();
 

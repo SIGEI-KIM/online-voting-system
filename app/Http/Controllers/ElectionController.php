@@ -58,9 +58,7 @@ class ElectionController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            // Changed validation to match datetime-local input format
             'start_date' => 'required|date_format:Y-m-d\TH:i',
-            // Changed validation to match datetime-local input format and added after:start_date
             'end_date' => 'required|date_format:Y-m-d\TH:i|after:start_date',
             'status' => 'required|in:upcoming,ongoing,completed',
         ]);
