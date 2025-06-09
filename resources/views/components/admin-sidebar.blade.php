@@ -1,8 +1,3 @@
-<!-- resources/views/components/admin-sidebar.blade.php -->
-{{-- This component displays the admin's sidebar navigation. --}}
-{{-- It receives the 'isSidebarOpen' state from its parent layout to control visibility of text. --}}
-{{-- Make sure this is located in resources/views/components/admin-sidebar.blade.php --}}
-
 <div class="h-full py-4 px-3 bg-gray-800 text-gray-200 flex flex-col"> {{-- Added flex flex-col here --}}
     {{-- Top section with "Admin Panel" / "AP" text --}}
     <div class="mb-6 flex items-center justify-between">
@@ -45,16 +40,24 @@
                     $pendingApplicationsCount = \App\Models\Application::where('status', 'pending')->count();
                 @endphp
                 <a href="{{ route('admin.applications.index') }}" class="flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 group {{ request()->routeIs('admin.applications.index') || request()->routeIs('admin.applications.show') || request()->routeIs('admin.applications.edit') ? 'bg-gray-700 text-white' : '' }}">
+                    {{-- Icon Container (Relative for absolute positioning of badge in collapsed state) --}}
                     <div class="relative flex-shrink-0">
+                        {{-- Icon for Applications --}}
                         <svg class="w-6 h-6 text-gray-400 group-hover:text-white {{ request()->routeIs('admin.applications.index') || request()->routeIs('admin.applications.show') || request()->routeIs('admin.applications.edit') ? 'text-white' : '' }}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
-                        {{-- Badge for pending applications --}}
-                        @if ($isSidebarOpen && $pendingApplicationsCount >= 0) {{-- Reverted: Show badge when sidebar is open, regardless of count --}}
-                            <span class="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-                                {{ $pendingApplicationsCount }}
-                            </span>
-                        @endif
+
+                        {{-- Badge for collapsed state: visible when sidebar is NOT open --}}
+                        <span x-show="!isSidebarOpen" class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                            {{ $pendingApplicationsCount }}
+                        </span>
                     </div>
+
+                    {{-- Text for Applications Link --}}
                     <span class="ml-3 sidebar-text" x-show="isSidebarOpen">{{ __('Applications') }}</span>
+
+                    {{-- Badge for open state: visible when sidebar IS open and next to text --}}
+                    <span x-show="isSidebarOpen" class="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold rounded-full bg-red-600 text-white leading-none">
+                        {{ $pendingApplicationsCount }}
+                    </span>
                 </a>
             </li>
             <li>
