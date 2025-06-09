@@ -26,16 +26,20 @@ COPY . .
 # Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# --- NEW: Clear Laravel caches explicitly before other commands ---
-RUN php artisan optimize:clear
+# --- Fix: Explicitly set CACHE_DRIVER=file for build time ---
+# This ensures that `optimize:clear` doesn't try to access a non-existent SQLite database for caching.
+RUN CACHE_DRIVER=file php artisan optimize:clear
 
 # Run Laravel migrations and cache commands (only once during build)
+# `php artisan migrate --force` needs to run after composer install and potentially cache clearing
+# `config:cache`, `route:cache`, `view:cache` will compile application assets for production
 RUN php artisan migrate --force && \
     php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache
 
 # Set permissions for storage and bootstrap/cache
+# These permissions are crucial for Laravel to write logs, cache, etc.
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
@@ -51,8 +55,10 @@ RUN a2ensite 000-default.conf
 # Enable Apache's mod_rewrite module (essential for Laravel's pretty URLs)
 RUN a2enmod rewrite
 
-# Expose port 80 (Apache's default)
+# Expose port 80 (Apache's default for web traffic)
 EXPOSE 80
 
 # Command to run on container start (Apache is typically default for this base image)
-# CMD ["apache2-foreground"]
+# This CMD is important. If you set a "Start Command" in Render's dashboard, it will override this.
+# For Apache to serve your app, ensure Render's "Start Command" is empty.
+CMD ["apache2-foreground"]
