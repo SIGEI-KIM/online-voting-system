@@ -44,4 +44,13 @@ class UserController extends Controller
 
     return view('candidate.index', compact('applicationsByElection'));
 }
+
+    public function indexVoters(): View
+    {
+        // Fetch all users where their role is 'voter'
+        $voters = User::where('role', 'voter')->get();
+
+        // Return a new view specifically for listing voters
+        return view('admin.users.voters-list', compact('voters'));
+    }
 }

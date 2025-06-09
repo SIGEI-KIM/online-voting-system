@@ -62,6 +62,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'admin'])->group(functio
     Route::get('/elections/{election}/results', [ElectionController::class, 'results'])->name('admin.elections.results');
 
     Route::resource('users', UserController::class)->except(['show']);
+    Route::get('/users/voters', [UserController::class, 'indexVoters'])->name('admin.voters.index');
     Route::get('/candidates', [UserController::class, 'showCandidatesWithApplications'])->name('admin.candidates.index');
 
     Route::get('/votes', [AdminController::class, 'showVoteDetails'])->name('admin.votes.index');

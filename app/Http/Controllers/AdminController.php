@@ -21,7 +21,7 @@ class AdminController extends Controller
                                        ->count(),
             'candidates' => Candidate::count(),
             'votes' => Vote::count(),
-            'users' => User::count(),
+            'users' => User::where('role', 'voter')->count(),
         ];
 
         $recentElections = Election::orderBy('created_at', 'desc')->limit(5)->get();

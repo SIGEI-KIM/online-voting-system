@@ -83,10 +83,11 @@
                 <div class="p-6 bg-purple-100 rounded-lg shadow border-2 border-purple-500 flex flex-col justify-between">
                     <div>
                         <h3 class="text-lg font-medium text-purple-800">{{ __('Total Voters') }}</h3>
-                        <p class="text-3xl font-bold text-purple-700">{{ $stats['users'] ?? 0 }}</p>
+                        <p class="text-3xl font-bold text-purple-700">{{ $stats['users'] ?? 0 }}</p> {{-- This value comes from the controller --}}
                     </div>
                     <div class="mt-4 text-right">
-                        <a href="{{ route('users.index') }}" class="text-purple-600 hover:text-purple-800 font-semibold text-sm">
+                        {{-- UPDATED: Link to the new route for voters only --}}
+                        <a href="{{ route('admin.voters.index') }}" class="text-purple-600 hover:text-purple-800 font-semibold text-sm">
                             {{ __('More info') }} &rarr;
                         </a>
                     </div>
