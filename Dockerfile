@@ -26,6 +26,9 @@ COPY . .
 # Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader
 
+# --- NEW: Clear Laravel caches explicitly before other commands ---
+RUN php artisan optimize:clear
+
 # Run Laravel migrations and cache commands (only once during build)
 RUN php artisan migrate --force && \
     php artisan config:cache && \
